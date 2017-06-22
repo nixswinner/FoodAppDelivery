@@ -7,11 +7,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
-    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
 
 
 
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
 // Replace the contents of the container with the new login_fragment
         //ft.replace(R.id.your_placeholder, new daily_progress());
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content, new fragment_main());
         ft.commit();
     }
@@ -39,14 +41,32 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                    // mTextMessage.setText(R.string.title_home);
-                    ft.replace(R.id.content, new fragment_main());
-                    ft.commit();
+                   /* ft.replace(R.id.content, new fragment_main());
+                    ft.commit();*/
+                    try{
+                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                        ft.replace(R.id.content, new fragment_main());
+                        ft.commit();
+                    } catch (Exception ex)
+                    {
+                        Toast.makeText(MainActivity.this,"Error: "+ex,Toast.LENGTH_LONG);
+                    }
                     return true;
                 case R.id.navigation_dashboard:
                     //mTextMessage.setText(R.string.title_dashboard);
+                      FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                      ft.replace(R.id.content, new fragment_orders());
+                      ft.commit();
+
                     return true;
                 case R.id.navigation_notifications:
                    // mTextMessage.setText(R.string.title_notifications);
+                   // ft.replace(R.id.content, new fragment_loyaltypts());
+                   // ft.commit();
+                        FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
+                        ft2.replace(R.id.content, new fragment_loyaltypts());
+                        ft2.commit();
+
                     return true;
             }
             return false;

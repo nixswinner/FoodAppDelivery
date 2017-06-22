@@ -10,7 +10,7 @@ public class fragment_loyaltypts extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         // Defines the xml file for the login_fragment
-        View view=inflater.inflate(R.layout.fragment_main, parent, false);
+        View view=inflater.inflate(R.layout.fragment_loyaltypts, parent, false);
 
 
 
