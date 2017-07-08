@@ -24,6 +24,33 @@ public class MainActivity extends AppCompatActivity {
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        //checking if user is logged in
+   /*     String name=SaveSharedPreference.getUserName(getApplicationContext());
+        if(name.length() == 0)
+        {
+            try {
+                // call Login Activity
+                // user is not logged in redirect him to Login Activity
+                Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                // Closing all the Activities
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                // Add new Flag to start new Activity
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                // Staring Login Activity
+                startActivity(i);
+
+            }catch (Exception ex)
+            {
+
+            }
+        }
+        else
+        {
+            // Stay at the current activity.
+            Toast.makeText(getApplicationContext(),"Hi,Welcome "+name,Toast.LENGTH_LONG).show();
+        }*/
 
 
 // Replace the contents of the container with the new login_fragment

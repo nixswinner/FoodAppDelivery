@@ -2,19 +2,24 @@ package com.tergech.nixon.foodappdeliver;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -37,8 +42,14 @@ public class foodlist extends AppCompatActivity {
      String[] outputStrArr[];
     Button btnOrder;
     String [] myarray={};
+    String destination;
+    int Total_cost;
     Map mMap = new HashMap();
+    //to store the value and the quantity of food selected
+    Map mMap2 = new HashMap();
 
+    String[] delivery_destinations = { "Sunrise ", "Tamals", "Laduvet ", "Adison", "Mt.Kenya ", "Batian",
+            "Nyandarua ", "Congo", "Ngamia ", "Kens" };
     // URL to get fetcing JSON
     private static String url = "http://nixontonui.net16.net/MyDB/fetchfood.php";
     ArrayList<HashMap<String, String>> foodlist;
@@ -56,6 +67,8 @@ public class foodlist extends AppCompatActivity {
         btnOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent=new Intent(foodlist.this,order_confirm.class);
+                startActivity(intent);
               String data="";
                 /*  for (int i=0;i<myarray.length;i++)
                 {
@@ -69,10 +82,12 @@ public class foodlist extends AppCompatActivity {
                int x=0;
                int z= mMap.size();//getting the size of hashmap
                 String myfood[]=new String[z];
+                //getting the key from the hashmap of the selected food
                 while (iter.hasNext()) {
                     Map.Entry mEntry = (Map.Entry) iter.next();
                     //System.out.println(mEntry.getKey() + " : " + mEntry.getValue());
                      data=""+mEntry.getKey();
+
                     try{
                         myfood[x]=data;
                     }catch (Exception ex)
@@ -83,7 +98,16 @@ public class foodlist extends AppCompatActivity {
                 }
                 int y=myfood.length;
                 String[]test={"Hello","Test data","Thanks"};
-                Toast.makeText(foodlist.this,"Saved are \n"+z,Toast.LENGTH_SHORT).show();
+                //Toast.makeText(foodlist.this,"Saved are \n"+z,Toast.LENGTH_SHORT).show();
+
+                final ArrayAdapter<String> adp = new ArrayAdapter<String>(foodlist.this,
+                        android.R.layout.simple_spinner_item, delivery_destinations);
+
+                //TextView tx= (TextView)findViewById(R.id.txt1);
+                final Spinner sp = new Spinner(foodlist.this);
+                sp.setLayoutParams(new LinearLayout.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT));
+                sp.setAdapter(adp);
+
 
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(foodlist.this)
                         .setTitle("Confirm:This is what you have ordered ")
@@ -91,7 +115,17 @@ public class foodlist extends AppCompatActivity {
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                Toast.makeText(foodlist.this, "Your order is being processed", Toast.LENGTH_SHORT).show();
+                                AlertDialog.Builder builder = new AlertDialog.Builder(foodlist.this);
+                                builder.setTitle("Choose Delivery Destination ");
+                                builder.setView(sp);
+                                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        Toast.makeText(foodlist.this, "Your order is being processed and shall be delivered in a while to "+destination, Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                builder.create().show();
+
 
 
                             }
@@ -117,6 +151,27 @@ public class foodlist extends AppCompatActivity {
 
             }
         });
+    }
+
+    //selected item on spinner
+    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+
+        switch (position)
+        {
+            case 0:
+                Toast.makeText(foodlist.this,"Sunrise",Toast.LENGTH_SHORT).show();
+                destination="Sunrise";
+                break;
+            case 1:
+                Toast.makeText(foodlist.this,"Tamals",Toast.LENGTH_SHORT).show();
+                destination="Tamals";
+            case 2:
+                Toast.makeText(foodlist.this,"Laduvet",Toast.LENGTH_SHORT).show();
+                destination="Laduvet";
+            case 3:
+                Toast.makeText(foodlist.this,"Mt.Kenya",Toast.LENGTH_SHORT).show();
+                destination="Mt.Kenya";
+        }
     }
 
     private class GetFood extends AsyncTask<Void, Void, Void> {
