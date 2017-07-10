@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -15,11 +14,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -44,9 +41,10 @@ public class foodlist extends AppCompatActivity {
     String [] myarray={};
     String destination;
     int Total_cost;
-    Map mMap = new HashMap();
+    //Map mMap = new HashMap();
+    HashMap<String,String> mMap = new HashMap<String,String >();
     //to store the value and the quantity of food selected
-    Map mMap2 = new HashMap();
+    HashMap<String,Integer> map_food_quantity = new HashMap<String,Integer >();
 
     String[] delivery_destinations = { "Sunrise ", "Tamals", "Laduvet ", "Adison", "Mt.Kenya ", "Batian",
             "Nyandarua ", "Congo", "Ngamia ", "Kens" };
@@ -67,8 +65,8 @@ public class foodlist extends AppCompatActivity {
         btnOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(foodlist.this,order_confirm.class);
-                startActivity(intent);
+                /*Intent intent=new Intent(foodlist.this,order_confirm.class);
+                startActivity(intent);*/
               String data="";
                 /*  for (int i=0;i<myarray.length;i++)
                 {
@@ -81,15 +79,25 @@ public class foodlist extends AppCompatActivity {
 
                int x=0;
                int z= mMap.size();//getting the size of hashmap
-                String myfood[]=new String[z];
+                final String myfood[]=new String[z];
+                final String myfood_quantity[]=new String[z];
                 //getting the key from the hashmap of the selected food
                 while (iter.hasNext()) {
                     Map.Entry mEntry = (Map.Entry) iter.next();
                     //System.out.println(mEntry.getKey() + " : " + mEntry.getValue());
                      data=""+mEntry.getKey();
 
+                        String c=mMap.get(data);
+                        int cost=Integer.parseInt(c);
+                        int quantity=map_food_quantity.get(data);
+                        int t=quantity*cost;
+
+                        Total_cost=Total_cost+t;
+
                     try{
                         myfood[x]=data;
+                        myfood_quantity[x]=""+quantity;
+
                     }catch (Exception ex)
                     {
                         Toast.makeText(foodlist.this,"Error"+ex,Toast.LENGTH_LONG).show();
@@ -97,16 +105,15 @@ public class foodlist extends AppCompatActivity {
                     x=x+1;
                 }
                 int y=myfood.length;
-                String[]test={"Hello","Test data","Thanks"};
-                //Toast.makeText(foodlist.this,"Saved are \n"+z,Toast.LENGTH_SHORT).show();
+
 
                 final ArrayAdapter<String> adp = new ArrayAdapter<String>(foodlist.this,
                         android.R.layout.simple_spinner_item, delivery_destinations);
 
-                //TextView tx= (TextView)findViewById(R.id.txt1);
+              /*  //TextView tx= (TextView)findViewById(R.id.txt1);
                 final Spinner sp = new Spinner(foodlist.this);
                 sp.setLayoutParams(new LinearLayout.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT));
-                sp.setAdapter(adp);
+                sp.setAdapter(adp);*/
 
 
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(foodlist.this)
@@ -115,19 +122,29 @@ public class foodlist extends AppCompatActivity {
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(foodlist.this);
+                                /*AlertDialog.Builder builder = new AlertDialog.Builder(foodlist.this);
                                 builder.setTitle("Choose Delivery Destination ");
                                 builder.setView(sp);
                                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                        Toast.makeText(foodlist.this, "Your order is being processed and shall be delivered in a while to "+destination, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(foodlist.this, "Your order is being processed and shall be delivered in a while Total Cost "+Total_cost, Toast.LENGTH_SHORT).show();
                                     }
                                 });
-                                builder.create().show();
+                                builder.create().show();*/
+                                //openning activity
+                                String food=ConvertArrayToString(myfood,myfood.length);
+                                //getting individual quanties
+                                String food_quantity=ConvertArrayToString(myfood_quantity,myfood_quantity.length);
+                                Intent intent =new Intent(foodlist.this,order_confirm.class);
+                                intent.putExtra("food",food);
+                                intent.putExtra("food_quantity",food_quantity);
+                                intent.putExtra("cost",""+Total_cost);
+                                startActivity(intent);
 
 
-
+                                Toast.makeText(foodlist.this, "Your order is being processed and shall be delivered in a while Total Cost "+Total_cost, Toast.LENGTH_SHORT).show();
+                                Total_cost=0;
                             }
                         })
                         .setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
@@ -153,6 +170,22 @@ public class foodlist extends AppCompatActivity {
         });
     }
 
+    //converting array to string
+    public  String ConvertArrayToString(String[] array,int size)
+    {
+        String strSeparator=",";
+
+        String str="";
+        for (int i=0;i<size;i++)
+        {
+            str=str+array[i];
+            if (i<size-1)
+            {
+                str=str+strSeparator;
+            }
+        }
+        return str;
+    }
     //selected item on spinner
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
 
@@ -302,8 +335,15 @@ public class foodlist extends AppCompatActivity {
         }
 
     }
-    public void alert(String Message)
+    public void add_food_quantity(String food_name,int x)
     {
+        map_food_quantity.put(food_name, x);
+    }
+
+
+    public void alert(final String Message)
+    {
+
         final EditText taskEditText = new EditText(foodlist.this);
         taskEditText.setInputType(InputType.TYPE_CLASS_PHONE);
         AlertDialog dialog = new AlertDialog.Builder(foodlist.this)
@@ -313,15 +353,19 @@ public class foodlist extends AppCompatActivity {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String no = String.valueOf(taskEditText.getText());
+                       String no = String.valueOf(taskEditText.getText());
 
-                       if(no==" ")
+                       if(no ==" ")
                        {
+
 
                            Toast.makeText(foodlist.this,"Please Specify the Quantity ",Toast.LENGTH_SHORT).show();
                        }
                        else {
-                           int Cups=Integer.parseInt(no);
+                          // Quantity=no;
+                           int x =Integer.parseInt(no);
+                           add_food_quantity(Message,x);
+
                        }
 
                     }
@@ -331,6 +375,8 @@ public class foodlist extends AppCompatActivity {
         dialog.show();
         dialog.getButton(dialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
         dialog.getButton(dialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
+
+
     }
 
 }
