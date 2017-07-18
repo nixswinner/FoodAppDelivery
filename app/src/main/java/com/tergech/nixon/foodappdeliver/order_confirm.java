@@ -1,5 +1,6 @@
 package com.tergech.nixon.foodappdeliver;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -25,14 +27,14 @@ import java.util.HashMap;
  */
 
 public class order_confirm extends AppCompatActivity {
-    String food_ordered,cost,amount,destination;
+    private static String food_ordered,cost,amount,destination;
     TextView txtcost,txtfood,txtamount,txtdestination,txtwhere;
     ListView listView;
     ArrayList<HashMap<String, String>> orderlist;
     private Spinner sp;
     EditText edtdetails;
-    String[] delivery_destinations = { "Sunrise ", "Tamals", "Laduvet ", "Adison", "Mt.Kenya ", "Batian",
-            "Nyandarua ", "Congo", "Ngamia ", "Kens" };
+    String[] delivery_destinations = {"","Sunrise ", "Tamals", "Laduvet ", "Adison", "Mt.Kenya ", "Batian",
+            "Nyandarua ", "Congo", "Ngamia ", "Kens","Mim Shack" };
     Button complete_order;
 
     @Override
@@ -49,8 +51,8 @@ public class order_confirm extends AppCompatActivity {
         cost=bundle.getString("cost");
         amount=bundle.getString("food_quantity");
         txtcost=(TextView)findViewById(R.id.txtcost);
-        txtfood=(TextView)findViewById(R.id.txtfood);
-        txtamount=(TextView)findViewById(R.id.txtamount);
+        /*txtfood=(TextView)findViewById(R.id.txtfood);
+        txtamount=(TextView)findViewById(R.id.txtamount);*/
 
         txtdestination=(TextView)findViewById(R.id.txtwhere ) ;
         txtwhere=(TextView)findViewById(R.id.txtwhere);
@@ -78,9 +80,9 @@ public class order_confirm extends AppCompatActivity {
 
 
         //setting text
-        txtfood.setText(food_ordered);
+       // txtfood.setText(food_ordered);
+       // txtamount.setText(amount);
         txtcost.setText("Your total cost: "+cost);
-        txtamount.setText(amount);
 
         //populating the orders in a list view
         ListAdapter adapter = new SimpleAdapter(
@@ -97,20 +99,57 @@ public class order_confirm extends AppCompatActivity {
         ArrayAdapter<String> adapter1=new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_dropdown_item_1line,delivery_destinations);
         sp.setAdapter(adapter1);
 
+        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String dest=sp.getSelectedItem().toString();
+                destination(dest);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                //destination("");
+            }
+        });
+        //destination(dest);
+
         complete_order=(Button)findViewById(R.id.save);
         //saving data to sqlite
+
         complete_order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Database db=new Database(getApplicationContext());
                 String date=getNow();
                 db.save_orders(food_ordered,cost,date);
+                //delaying
+                final ProgressDialog progressDialog = new ProgressDialog(order_confirm.this);
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("Ordering...");
+                progressDialog.show();
+                new android.os.Handler().postDelayed(
+                        new Runnable() {
+                            public void run() {
+                                progressDialog.dismiss();
+                                //openning myorders
+                                Intent intent=new Intent(getApplicationContext(),MainActivity.class);
+                                intent.putExtra("madeOrder","1");
+                                startActivity(intent);
+
+                            }
+                        }, 3000);
+
+
+
+
+
 
             }
         });
 
     }
-    //selected item on spinner
+
+/*    //selected item on spinner
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
 
         switch (position)
@@ -125,15 +164,33 @@ public class order_confirm extends AppCompatActivity {
             case 2:
                 Toast.makeText(getApplicationContext(),"Laduvet",Toast.LENGTH_SHORT).show();
                 destination="Laduvet";
+                destination(destination);
             case 3:
                 Toast.makeText(getApplicationContext(),"Mt.Kenya",Toast.LENGTH_SHORT).show();
                 destination="Mt.Kenya";
 
 
         }
-        txtdestination.setVisibility(View.VISIBLE);
-        txtdestination.setText("Which place specifically in: "+destination);
-        txtwhere.setVisibility(View.VISIBLE);
+
+
+
+    }*/
+    //check if the destination has been selected
+    public void destination(String destination)
+    {
+        String Destination="";
+        //Toast.makeText(getApplicationContext(),"You live at "+destination,Toast.LENGTH_SHORT).show();
+        if(destination !="")
+        {
+            RelativeLayout RL=(RelativeLayout)findViewById(R.id.Ldestination);
+            RL.setVisibility(View.VISIBLE);
+            txtdestination.setText("Which place specifically at: "+destination);
+        EditText edtdestination=(EditText)findViewById(R.id.edtdestination);
+            String specific=edtdestination.getText().toString();
+            Destination=destination+" , "+specific;
+
+        }
+        Toast.makeText(getApplicationContext(),"You live at "+Destination,Toast.LENGTH_SHORT).show();
 
     }
     //converting string to array

@@ -59,7 +59,7 @@ public class Database extends SQLiteOpenHelper {
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()) {
 			do {
-				 food_name = cursor.getString(3);
+				 food_name = cursor.getString(1);
                  food_name=""+food_name;
 
 			} while (cursor.moveToNext()); // modify here
@@ -67,8 +67,45 @@ public class Database extends SQLiteOpenHelper {
 		return food_name;
 
 	}
+	//getting food_ordeded
+	public String get_food_cost(String tdate)
+	{
+		String food_name="";
+		SQLiteDatabase db = this.getReadableDatabase();
+		String sql ="SELECT * FROM orders WHERE date='"+tdate+"'";
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()) {
+			do {
+				food_name = cursor.getString(2);
+				food_name=""+food_name;
 
-//	Saving orders data in the database
+			} while (cursor.moveToNext()); // modify here
+		}
+		return food_name;
+
+	}
+
+	//getting food_ordeded
+	public String get_food_order_date(String tdate)
+	{
+		String food_name="";
+		SQLiteDatabase db = this.getReadableDatabase();
+		String sql ="SELECT * FROM orders WHERE date='"+tdate+"'";
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()) {
+			do {
+				food_name = cursor.getString(3);
+				food_name=""+food_name;
+
+			} while (cursor.moveToNext()); // modify here
+		}
+		return food_name;
+
+	}
+
+
+
+
 	public void save_orders(String food_ordered, String cost, String _date)// Modify here to
 
 	{

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+    <TextView
+        android:id="@+id/txtorder_id"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dip"
+        android:paddingTop="6dip"
+        android:textColor="#2754ea"
+        android:textSize="16sp"
+        android:text="Order ID"
+        android:textStyle="bold"
+        />
+    <TextView
+        android:id="@+id/txtfood_ordered"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dip"
+        android:paddingTop="6dip"
+        android:textColor="#2754ea"
+        android:textSize="16sp"
+        android:text="Food Ordered"
+        android:textStyle="bold"
+        />
+    <TextView
+        android:id="@+id/txttotal_cost"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dip"
+        android:paddingTop="6dip"
+        android:textColor="#2754ea"
+        android:textSize="16sp"
+        android:text="Total Cost"
+        android:textStyle="bold"
+        />
+    <TextView
+        android:id="@+id/txtdestination"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dip"
+        android:paddingTop="6dip"
+        android:textColor="#2754ea"
+        android:textSize="16sp"
+        android:text="Destination"
+        android:textStyle="bold"
+        />
+
+
+
+</LinearLayout>

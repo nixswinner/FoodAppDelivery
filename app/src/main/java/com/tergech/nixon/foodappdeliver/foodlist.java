@@ -184,9 +184,9 @@ public class foodlist extends AppCompatActivity {
                 str=str+strSeparator;
             }
         }
-        return str;
+        return str+"_";
     }
-    //selected item on spinner
+/*    //selected item on spinner
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
 
         switch (position)
@@ -205,7 +205,7 @@ public class foodlist extends AppCompatActivity {
                 Toast.makeText(foodlist.this,"Mt.Kenya",Toast.LENGTH_SHORT).show();
                 destination="Mt.Kenya";
         }
-    }
+    }*/
 
     private class GetFood extends AsyncTask<Void, Void, Void> {
 
@@ -348,7 +348,7 @@ public class foodlist extends AppCompatActivity {
         taskEditText.setInputType(InputType.TYPE_CLASS_PHONE);
         AlertDialog dialog = new AlertDialog.Builder(foodlist.this)
                 .setTitle("\n\n\nQuantify")
-                .setMessage("How many "+Message+" do you want?")
+                .setMessage("How many "+Message+"(s)"+" do you want?")
                 .setView(taskEditText)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override

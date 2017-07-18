@@ -1,5 +1,6 @@
 package com.tergech.nixon.foodappdeliver;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+    private static String order_status="0";
 
     private TextView mTextMessage;
 
@@ -20,6 +22,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //getting ordered food
+       try{
+           Intent intent=getIntent();
+           Bundle bundle=intent.getExtras();
+           order_status=bundle.getString("madeOrder");
+
+
+       }catch(Exception ex)
+       {
+
+       }
 
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -55,9 +68,21 @@ public class MainActivity extends AppCompatActivity {
 
 // Replace the contents of the container with the new login_fragment
         //ft.replace(R.id.your_placeholder, new daily_progress());
+        String o_s=order_status;
+        ///o_s="1";
+        int x=Integer.parseInt(o_s);
+        x=x+1;
+        if (x==2)
+        {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.content, new fragment_orders());
+            ft.commit();
+        }else
+        {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content, new fragment_main());
         ft.commit();
+        }
     }
     //navigation
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
