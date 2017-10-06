@@ -1,4 +1,4 @@
-package com.tergech.nixon.foodappdeliver;
+ package com.tergech.nixon.foodappdeliver;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -19,6 +19,13 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,7 +39,14 @@ import java.util.Map;
  * Created by Tonui on 6/22/2017.
  */
 
-public class foodlist extends AppCompatActivity {
+public class manage_foodlist extends AppCompatActivity {
+
+    //updating in db
+    //saving to db
+    public static final String KEY_ID = "id";
+    public  final String KEY_STATUS = "status";
+    private static final String REGISTER_URL = "http://nixontonui.net16.net/MyDB/volley.php";
+
 
     private ProgressDialog pDialog;
     private ListView lv;
@@ -54,7 +68,7 @@ public class foodlist extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_food_list);
+        setContentView(R.layout.manage_food_list);
 
         foodlist = new ArrayList<>();
 
@@ -100,14 +114,14 @@ public class foodlist extends AppCompatActivity {
 
                     }catch (Exception ex)
                     {
-                        Toast.makeText(foodlist.this,"Error"+ex,Toast.LENGTH_LONG).show();
+                        Toast.makeText(manage_foodlist.this,"Error"+ex,Toast.LENGTH_LONG).show();
                     }
                     x=x+1;
                 }
                 int y=myfood.length;
 
 
-                final ArrayAdapter<String> adp = new ArrayAdapter<String>(foodlist.this,
+                final ArrayAdapter<String> adp = new ArrayAdapter<String>(manage_foodlist.this,
                         android.R.layout.simple_spinner_item, delivery_destinations);
 
               /*  //TextView tx= (TextView)findViewById(R.id.txt1);
@@ -116,7 +130,7 @@ public class foodlist extends AppCompatActivity {
                 sp.setAdapter(adp);*/
 
 
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(foodlist.this)
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(manage_foodlist.this)
                         .setTitle("Confirm:Is this is what you have ordered?")
 
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -136,21 +150,21 @@ public class foodlist extends AppCompatActivity {
                                 String food=ConvertArrayToString(myfood,myfood.length);
                                 //getting individual quanties
                                 String food_quantity=ConvertArrayToString(myfood_quantity,myfood_quantity.length);
-                                Intent intent =new Intent(foodlist.this,order_confirm.class);
+                                Intent intent =new Intent(manage_foodlist.this,order_confirm.class);
                                 intent.putExtra("food",food);
                                 intent.putExtra("food_quantity",food_quantity);
                                 intent.putExtra("cost",""+Total_cost);
                                 startActivity(intent);
 
 
-                                Toast.makeText(foodlist.this, "Your order is being processed and shall be delivered in a while Total Cost "+Total_cost, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(manage_foodlist.this, "Your order is being processed and shall be delivered in a while Total Cost "+Total_cost, Toast.LENGTH_SHORT).show();
                                 Total_cost=0;
                             }
                         })
                         .setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                Toast.makeText(foodlist.this, "You have cancled your order,You can reorder", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(manage_foodlist.this, "You have cancled your order,You can reorder", Toast.LENGTH_SHORT).show();
                             }
                         })
                         .setItems(myfood, new DialogInterface.OnClickListener() {
@@ -207,14 +221,13 @@ public class foodlist extends AppCompatActivity {
         }
     }*/
 
-    //.......................................Start of fetch from db................................................
     private class GetFood extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             // Showing progress dialog
-            pDialog = new ProgressDialog(foodlist.this);
+            pDialog = new ProgressDialog(manage_foodlist.this);
             pDialog.setMessage("Please wait...");
             pDialog.setCancelable(false);
             pDialog.show();
@@ -261,7 +274,7 @@ public class foodlist extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(foodlist.this,
+                            Toast.makeText(manage_foodlist.this,
                                     "Json parsing error: " + e.getMessage(),
                                     Toast.LENGTH_LONG)
                                     .show();
@@ -274,7 +287,7 @@ public class foodlist extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(foodlist.this,
+                        Toast.makeText(manage_foodlist.this,
                                 "Couldn't get json from server. Check LogCat for possible errors!",
                                 Toast.LENGTH_LONG)
                                 .show();
@@ -296,9 +309,9 @@ public class foodlist extends AppCompatActivity {
              * Updating parsed JSON data into ListView
              * */
             ListAdapter adapter = new SimpleAdapter(
-                    foodlist.this, foodlist,
-                    R.layout.list_item, new String[]{"food_name", "cost"}, new int[]{
-                    R.id.foodname, R.id.cost});
+                    manage_foodlist.this, foodlist,
+                    R.layout.list_itemii, new String[]{"food_name"}, new int[]{
+                    R.id.foodname});
 
             lv.setAdapter(adapter);
             lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
@@ -317,7 +330,7 @@ public class foodlist extends AppCompatActivity {
                         String food_name=foodlist.get(pos).get("food_name");
                         String cost=foodlist.get(pos).get("cost");
                         alert(food_name);
-                        Toast.makeText(foodlist.this,"You have selected  "+food_name,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(manage_foodlist.this,"You have selected  "+food_name,Toast.LENGTH_SHORT).show();
                         String data=foodlist.get(pos).toString();
                         //myarray[0]=calories;
 
@@ -326,7 +339,7 @@ public class foodlist extends AppCompatActivity {
 
                     }catch (Exception ex)
                     {
-                        Toast.makeText(foodlist.this,"Error "+ex,Toast.LENGTH_LONG).show();
+                        Toast.makeText(manage_foodlist.this,"Error "+ex,Toast.LENGTH_LONG).show();
                     }
 
                 }
@@ -336,7 +349,6 @@ public class foodlist extends AppCompatActivity {
         }
 
     }
-    //.......................................end of fetch from db................................................
     public void add_food_quantity(String food_name,int x)
     {
         map_food_quantity.put(food_name, x);
@@ -346,9 +358,9 @@ public class foodlist extends AppCompatActivity {
     public void alert(final String Message)
     {
 
-        final EditText taskEditText = new EditText(foodlist.this);
+        final EditText taskEditText = new EditText(manage_foodlist.this);
         taskEditText.setInputType(InputType.TYPE_CLASS_PHONE);
-        AlertDialog dialog = new AlertDialog.Builder(foodlist.this)
+        AlertDialog dialog = new AlertDialog.Builder(manage_foodlist.this)
                 .setTitle("\n\n\nQuantify")
                 .setMessage("How many "+Message+"(s)"+" do you want?")
                 .setView(taskEditText)
@@ -361,7 +373,7 @@ public class foodlist extends AppCompatActivity {
                        {
 
 
-                           Toast.makeText(foodlist.this,"Please Specify the Quantity ",Toast.LENGTH_SHORT).show();
+                           Toast.makeText(manage_foodlist.this,"Please Specify the Quantity ",Toast.LENGTH_SHORT).show();
                        }
                        else {
                           // Quantity=no;
@@ -380,5 +392,42 @@ public class foodlist extends AppCompatActivity {
 
 
     }
+
+    //update to db for food availability
+    //...................................saving to online db...................................................
+    public void save_to_db(String id, String status){
+        final String _ID=id;
+        final  String Status=status;
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(getApplicationContext()
+                                ,response,Toast.LENGTH_LONG).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(),error.toString(), Toast.LENGTH_LONG).show();
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<String, String>();
+                params.put(KEY_ID,_ID);
+                params.put(KEY_STATUS, Status);
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        requestQueue.add(stringRequest);
+    }
+
+    //......................................................................................
 
 }

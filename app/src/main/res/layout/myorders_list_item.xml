@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="2dip"
         android:paddingTop="6dip"
-        android:textColor="#2754ea"
+        android:textColor="#222e58"
         android:textSize="16sp"
         android:text="Cost"
         android:textStyle="bold"
@@ -21,19 +21,49 @@
         android:layout_alignStart="@+id/foodname" />
 
     <TextView
+        android:id="@+id/textView3"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dip"
+        android:paddingTop="6dip"
+        android:text="Total Cost:"
+        android:textColor="#222e58"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_alignBaseline="@+id/cost"
+        android:layout_alignBottom="@+id/cost"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
         android:id="@+id/foodname"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="50dp"
+        android:layout_marginLeft="105dp"
         android:paddingBottom="2dip"
         android:paddingTop="6dip"
-        android:text="Hello Food Name"
-        android:textColor="#2754ea"
+        android:text="Hello Food Name L"
+        android:textColor="#151e3b"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_marginStart="105dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dip"
+        android:paddingTop="6dip"
+        android:text="Food Ordered:"
+        android:textColor="#151e3b"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:id="@+id/txttime"
@@ -41,7 +71,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="2dip"
         android:paddingTop="6dip"
-        android:text="Time Wait"
+        android:text="Time Wait:20min"
         android:textColor="#ea38e4"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -59,7 +89,7 @@
         android:paddingBottom="2dip"
         android:paddingTop="6dip"
         android:text=" Food Cost"
-        android:textColor="#95aaef"
+        android:textColor="#32437c"
         android:textSize="16sp"
         android:textStyle="bold" />
 

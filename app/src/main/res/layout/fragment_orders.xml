@@ -30,7 +30,7 @@
                 <ListView
                     android:layout_below="@+id/message"
                     android:id="@+id/listView"
-                    android:background="#dfd6f1"
+                    android:background="#dbecf5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </android.support.v7.widget.CardView>

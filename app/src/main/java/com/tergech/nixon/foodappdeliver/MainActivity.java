@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.content, new fragment_orders());
             ft.commit();
+            order_status="0";
         }else
         {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
