@@ -49,7 +49,7 @@ public class foodlist extends AppCompatActivity {
     String[] delivery_destinations = { "Sunrise ", "Tamals", "Laduvet ", "Adison", "Mt.Kenya ", "Batian",
             "Nyandarua ", "Congo", "Ngamia ", "Kens" };
     // URL to get fetcing JSON
-    private static String url = "http://nixontonui.net16.net/MyDB/fetchfood.php";
+    private static String url = "http://192.168.137.1/Api/Food_Delivery/public/index.php/api/getFoodList";
     ArrayList<HashMap<String, String>> foodlist;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +85,8 @@ public class foodlist extends AppCompatActivity {
                 while (iter.hasNext()) {
                     Map.Entry mEntry = (Map.Entry) iter.next();
                     //System.out.println(mEntry.getKey() + " : " + mEntry.getValue());
-                     data=""+mEntry.getKey();
+
+                     data=""+mEntry.getKey();//+"-"+mEntry.getKey();
 
                         String c=mMap.get(data);
                         int cost=Integer.parseInt(c);
@@ -95,7 +96,8 @@ public class foodlist extends AppCompatActivity {
                         Total_cost=Total_cost+t;
 
                     try{
-                        myfood[x]=data;
+                        String food=quantity+" "+data;
+                        myfood[x]=food;
                         myfood_quantity[x]=""+quantity;
 
                     }catch (Exception ex)
@@ -242,7 +244,7 @@ public class foodlist extends AppCompatActivity {
                         JSONObject c = contacts.getJSONObject(i);
 
                         String id = c.getString("id");
-                        String food_name = c.getString("food_name");
+                        String food_name = c.getString("name");
                         String cost = c.getString("cost");
                         // tmp hash map for single contact
                         HashMap<String, String> contact = new HashMap<>();

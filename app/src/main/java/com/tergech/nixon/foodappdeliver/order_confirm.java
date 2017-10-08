@@ -18,11 +18,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,24 +36,19 @@ import java.util.Map;
  */
 
 public class order_confirm extends AppCompatActivity {
-    private static String food_ordered,cost,amount,destination;
-
+    private static String food_ordered,cost,amount,destination,user_id;
+    private String url="http://192.168.137.1/Api/Food_Delivery/public/index.php/api/SaveOrders";
+    private  ProgressDialog progressDialog;
     TextView txtcost,txtfood,txtamount,txtdestination,txtwhere;
     ListView listView;
     ArrayList<HashMap<String, String>> orderlist;
     private Spinner sp;
-    EditText edtdetails;
+    EditText edtdetails , edtdestination;
     String[] delivery_destinations = {"","Sunrise ", "Tamals", "Laduvet ", "Adison", "Mt.Kenya ", "Batian",
             "Nyandarua ", "Congo", "Ngamia ", "Kens","Mim Shack" };
     Button complete_order;
 
-    //saving to db
-    public  final String KEY_FOOD_ORDERED = "food_ordered";
-    public static final String KEY_COST = "cost";
-    public static final String KEY_DESTINATION = "destination";
-    public  final String KEY_DATE = "date";
-
-    private static final String REGISTER_URL = "http://nixontonui.net16.net/MyDB/save_order.php";
+  /*  private static final String REGISTER_URL = "http://nixontonui.net16.net/MyDB/save_order.php";*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +63,8 @@ public class order_confirm extends AppCompatActivity {
         food_ordered=bundle.getString("food");
         cost=bundle.getString("cost");
         amount=bundle.getString("food_quantity");
+        //get particular user id
+        user_id="10";//SaveSharedPreference.getUserId(getApplicationContext());
         txtcost=(TextView)findViewById(R.id.txtcost);
         /*txtfood=(TextView)findViewById(R.id.txtfood);
         txtamount=(TextView)findViewById(R.id.txtamount);*/
@@ -74,7 +72,11 @@ public class order_confirm extends AppCompatActivity {
         txtdestination=(TextView)findViewById(R.id.txtwhere ) ;
         txtwhere=(TextView)findViewById(R.id.txtwhere);
         edtdetails=(EditText)findViewById(R.id.edtdestination) ;
+        edtdestination=(EditText)findViewById(R.id.edtdestination);
 
+        // Progress dialog
+        progressDialog = new ProgressDialog(order_confirm.this);
+        progressDialog.setCancelable(false);
 
         //converting quantity and food order to arrays
         String[] ordered_food,order_amount;
@@ -99,7 +101,7 @@ public class order_confirm extends AppCompatActivity {
         //setting text
        // txtfood.setText(food_ordered);
        // txtamount.setText(amount);
-        txtcost.setText("Your total cost: "+cost);
+        txtcost.setText("Your total cost: Ksh"+cost);
 
         //populating the orders in a list view
         ListAdapter adapter = new SimpleAdapter(
@@ -136,14 +138,24 @@ public class order_confirm extends AppCompatActivity {
         complete_order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Database db=new Database(getApplicationContext());
-                String date=getNow();
+               /* Database db=new Database(getApplicationContext());
+                String date=getNow();*/
                 //saving to the database
-                db.save_orders(food_ordered,cost,date);//sqlite
+                //db.save_orders(food_ordered,cost,date);//sqlite
                 //saving to online db
-                save_to_db(food_ordered,cost,destination,date);//sa
+                //save_to_db(food_ordered,cost,destination,date);//sa
 
-                //delaying
+                // Progress dialog
+
+                //OrderNow(user_id,food_ordered,amount,destination,cost);
+                String specific=  edtdestination.getText().toString();
+                String de=destination+""+specific;
+                //Toast.makeText(getApplicationContext(),"Specific "+destination+" "+specific,Toast.LENGTH_SHORT).show();
+
+                saveOrder(user_id,food_ordered,amount,de,cost);
+              //k./  Toast.makeText(getApplicationContext(),)
+
+             /*   //delaying
                 final ProgressDialog progressDialog = new ProgressDialog(order_confirm.this);
                 progressDialog.setIndeterminate(true);
                 progressDialog.setMessage("Ordering..."+destination);
@@ -158,7 +170,7 @@ public class order_confirm extends AppCompatActivity {
                                 startActivity(intent);
 
                             }
-                        }, 3000);
+                        }, 3000);*/
 
 
 
@@ -197,7 +209,7 @@ public class order_confirm extends AppCompatActivity {
 
     }*/
     //check if the destination has been selected
-    public String destination(String destination)
+    public String destination(final String destination)
     {
         String Destination="";
         //Toast.makeText(getApplicationContext(),"You live at "+destination,Toast.LENGTH_SHORT).show();
@@ -206,7 +218,6 @@ public class order_confirm extends AppCompatActivity {
             RelativeLayout RL=(RelativeLayout)findViewById(R.id.Ldestination);
             RL.setVisibility(View.VISIBLE);
             txtdestination.setText("Which place specifically at: "+destination);
-        EditText edtdestination=(EditText)findViewById(R.id.edtdestination);
             String specific=edtdestination.getText().toString();
             Destination=destination+" , "+specific;
 
@@ -232,44 +243,87 @@ public class order_confirm extends AppCompatActivity {
 
 
 
-    //...................................post saving to online db...................................................
-    public void save_to_db(String food_ordered, String cost,String destination, String _date){
-        final String food_order=food_ordered;
-        final  String total_cost=cost;
-        final  String delivery_destination=destination;
-        final String _dt=_date;
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Toast.makeText(getApplicationContext()
-                                ,response,Toast.LENGTH_LONG).show();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(),error.toString(), Toast.LENGTH_LONG).show();
-                    }
-                }){
-            @Override
-            protected Map<String,String> getParams(){
-                Map<String,String> params = new HashMap<String, String>();
-                params.put(KEY_FOOD_ORDERED,food_order);
-                params.put(KEY_COST, total_cost);
-                params.put(KEY_DESTINATION, delivery_destination);
-                params.put(KEY_DATE,_dt);
-
-                return params;
-            }
-
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        requestQueue.add(stringRequest);
-    }
 
     //....................................................................................................................
+
+
+    private void saveOrder(final String user_id, final String food_ordered,
+                           final String Amount,final String delivery_destination,
+                           final String total_cost) {
+        // Tag used to cancel the request
+        String cancel_req_tag = "register";
+        progressDialog.setMessage("Making an Order...");
+        showDialog();
+
+        StringRequest strReq = new StringRequest(Request.Method.POST,
+                url, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                //Log.d(TAG, "Register Response: " + response.toString());
+                Toast.makeText(getApplicationContext(), " "+response.toString(), Toast.LENGTH_SHORT).show();
+
+                hideDialog();
+                //Toast.makeText(getApplicationContext(), "Response "+response.toString(), Toast.LENGTH_LONG).show();
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean("error");
+
+
+                    // String user = jObj.getJSONObject("user").getString("name");
+                    // Toast.makeText(getApplicationContext(), "Hi " + user +", You are successfully Registered!", Toast.LENGTH_SHORT).show();
+
+                    // Launch login activity
+                    Toast.makeText(getApplicationContext(), "Ordered Successfully ", Toast.LENGTH_SHORT).show();
+                /*    Intent intent = new Intent(
+                            getApplicationContext(),
+                            driver.class);
+                    startActivity(intent);
+                    getApplicationContext().finish();*/
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                   /* Toast.makeText(getApplicationContext(),
+                            "Error Occured Try again"+e, Toast.LENGTH_LONG).show();*/
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Log.e(TAG, "Registration Error: " + error.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+                hideDialog();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting params to register url
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("user_id", user_id);
+                params.put("food_ordered", food_ordered);
+                params.put("Amount", Amount);
+                params.put("total_cost", total_cost);
+                params.put("delivery_destination", delivery_destination);
+                return params;
+            }
+        };
+        // Adding request to request queue
+        //requestQueue.add(strReq);
+        AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(strReq, cancel_req_tag);
+    }
+
+
+    private void showDialog() {
+        if (!progressDialog.isShowing())
+            progressDialog.show();
+    }
+
+    private void hideDialog() {
+        if (progressDialog.isShowing())
+            progressDialog.dismiss();
+    }
 
 }
