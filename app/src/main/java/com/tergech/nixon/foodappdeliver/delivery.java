@@ -2,16 +2,13 @@ package com.tergech.nixon.foodappdeliver;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.InputType;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -30,7 +27,7 @@ import java.util.HashMap;
 
 public class delivery extends AppCompatActivity {
 
-    private ProgressDialog pDialog;
+    private ProgressDialog pDialog ,progressDialog;
     private ListView listView;
      String[] outputStrArr[];
     Button btnOrder;
@@ -43,36 +40,29 @@ public class delivery extends AppCompatActivity {
     HashMap<String,Integer> map_food_quantity = new HashMap<String,Integer >();
     
     // URL to get fetcing JSON
-    private static String url = "http://nixontonui.net16.net/MyDB/fetch_deliveries.php";
+    private static String url = "http://192.168.137.1/Api/Food_Delivery/public/index.php/api/getOrders";
     ArrayList<HashMap<String, String>> foodlist;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delivery);
         //getting reference to listview
+        foodlist = new ArrayList<>();
         listView=(ListView)findViewById(R.id.listView);
+        progressDialog = new ProgressDialog(delivery.this);
+        progressDialog.setCancelable(false);
 
         //executing method to get orders
-        new GetOrders();
-          
-    }
-
-    //converting array to string
-    public  String ConvertArrayToString(String[] array,int size)
-    {
-        String strSeparator=",";
-
-        String str="";
-        for (int i=0;i<size;i++)
-        {
-            str=str+array[i];
-            if (i<size-1)
-            {
-                str=str+strSeparator;
-            }
+        try {
+            new GetOrders().execute();
         }
-        return str+"_";
+          catch (Exception ex)
+          {
+              Toast.makeText(delivery.this,"Error "+ex,Toast.LENGTH_SHORT).show();
+          }
     }
+
+
 
     private class GetOrders extends AsyncTask<Void, Void, Void> {
 
@@ -109,8 +99,8 @@ public class delivery extends AppCompatActivity {
 
                         String id = c.getString("id");
                         String food_ordered = c.getString("food_ordered");
-                        String cost = c.getString("cost");
-                        String destination = c.getString("destination");
+                        String cost = c.getString("total_cost");
+                        String destination = c.getString("delivery_destination");
                         // tmp hash map for single contact
                         HashMap<String, String> contact = new HashMap<>();
 
@@ -163,13 +153,19 @@ public class delivery extends AppCompatActivity {
             /**
              * Updating parsed JSON data into ListView
              * */
-            ListAdapter adapter = new SimpleAdapter(
-                    delivery.this, foodlist,
-                    R.layout.delivery_list, new String[]{"id", "food_ordered","cost","destination"}, new int[]{
-                    R.id.txtorder_id, R.id.txtfood_ordered,R.id.txtcost,R.id.txtdestination});
+           try {
+               ListAdapter adapter = new SimpleAdapter(
+                       delivery.this, foodlist,
+                       R.layout.delivery_list, new String[]{"id", "food_ordered","cost","destination"}, new int[]{
+                       R.id.txt_deliver_order_id, R.id.txt_deliver_food_ordered,R.id.txt_deliver_total_cost,
+                       R.id.txt_deliver_destination});
 
-            listView.setAdapter(adapter);
-            listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+               listView.setAdapter(adapter);
+               listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+           }catch(Exception ex)
+           {
+               Toast.makeText(delivery.this,"Error "+ex,Toast.LENGTH_LONG).show();
+           }
 
 
 
@@ -177,7 +173,7 @@ public class delivery extends AppCompatActivity {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
-                    //Toast.makeText(foodlist.this,"You have selected  "+foodlist.get(pos),Toast.LENGTH_LONG).show();
+                    //Toast.makeText(delivery.this,"You have selected  "+foodlist.get(pos),Toast.LENGTH_LONG).show();
                     //hashmaps
 
 
@@ -192,7 +188,7 @@ public class delivery extends AppCompatActivity {
 
                         AlertDialog dialog = new AlertDialog.Builder(delivery.this)
                                 .setTitle("\n\n\nDelivery Alert")
-                                .setMessage("Do you want to deliver Order  "+order_id +" to "+destination+" ?")
+                                .setMessage("Do you want to deliver Order ID  "+order_id +" to "+destination+" ?")
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -218,48 +214,7 @@ public class delivery extends AppCompatActivity {
         }
 
     }
-    public void add_food_quantity(String food_name,int x)
-    {
-        map_food_quantity.put(food_name, x);
-    }
 
 
-    public void alert(final String Message)
-    {
-
-        final EditText taskEditText = new EditText(delivery.this);
-        taskEditText.setInputType(InputType.TYPE_CLASS_PHONE);
-        AlertDialog dialog = new AlertDialog.Builder(delivery.this)
-                .setTitle("\n\n\nQuantify")
-                .setMessage("How many "+Message+"(s)"+" do you want?")
-                .setView(taskEditText)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                       String no = String.valueOf(taskEditText.getText());
-
-                       if(no ==" ")
-                       {
-
-
-                           Toast.makeText(delivery.this,"Please Specify the Quantity ",Toast.LENGTH_SHORT).show();
-                       }
-                       else {
-                          // Quantity=no;
-                           int x =Integer.parseInt(no);
-                           add_food_quantity(Message,x);
-
-                       }
-
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .create();
-        dialog.show();
-        dialog.getButton(dialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
-        dialog.getButton(dialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
-
-
-    }
 
 }

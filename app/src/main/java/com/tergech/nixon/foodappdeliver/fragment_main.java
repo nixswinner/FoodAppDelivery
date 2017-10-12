@@ -18,6 +18,17 @@ public class fragment_main extends Fragment {
         View view=inflater.inflate(R.layout.fragment_main, parent, false);
         Button order=(Button)view.findViewById(R.id.btnorder);
         Button list=(Button)view.findViewById(R.id.btn);
+        Button deliver=(Button)view.findViewById(R.id.btn_deliver);
+
+        //deliver temporary
+        deliver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(getActivity(),delivery.class);
+                startActivity(intent);
+            }
+        });
+
         //adding animations
         final Animation animTranslate = AnimationUtils.loadAnimation(getActivity(), R.anim.anim_translate);
         order.startAnimation(animTranslate);
@@ -33,6 +44,7 @@ public class fragment_main extends Fragment {
                 }
             }
         });
+
 
     order.setOnClickListener(new View.OnClickListener() {
         @Override
