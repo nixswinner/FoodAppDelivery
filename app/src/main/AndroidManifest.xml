@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tergech.nixon.foodappdeliver">
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -19,15 +20,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".foodlist"/>
-            <activity android:name=".LoginActivity"/>
-        <activity android:name=".RegisterActivity"/>
+        <activity android:name=".foodlist" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".RegisterActivity" />
         <activity android:name=".order_confirm" />
-        <activity android:name=".manage_foodlist"/>
-        <activity android:name=".delivery"/>
-
-
-            />
+        <activity android:name=".manage_foodlist" />
+        <activity android:name=".delivery" />
+        />
+        <activity android:name=".Delivery_main" />
+        <activity
+            android:name=".deliverer_dashboard"
+            android:label="@string/title_activity_deliverer_dashboard"></activity>
     </application>
 
 </manifest>

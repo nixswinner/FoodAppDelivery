@@ -3,4 +3,8 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="title_home1">Home</string>
+    <string name="title_dashboard1">My Orders</string>
+    <string name="title_notifications1">Commission Earned</string>
+    <string name="title_activity_deliverer_dashboard">My Dashboard</string>
 </resources>

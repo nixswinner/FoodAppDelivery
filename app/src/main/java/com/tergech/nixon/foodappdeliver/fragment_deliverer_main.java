@@ -4,9 +4,12 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListAdapter;
@@ -27,15 +30,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Tonui on 6/22/2017.
- */
-
-public class delivery extends AppCompatActivity {
-
+public class fragment_deliverer_main extends Fragment {
     private ProgressDialog pDialog ,progressDialog;
     private ListView listView;
-     String[] outputStrArr[];
+    String[] outputStrArr[];
     Button btnOrder;
     String [] myarray={};
     String destination;
@@ -44,33 +42,40 @@ public class delivery extends AppCompatActivity {
     HashMap<String,String> mMap = new HashMap<String,String >();
     //to store the value and the quantity of food selected
     HashMap<String,Integer> map_food_quantity = new HashMap<String,Integer >();
-    
+
     // URL to get fetcing JSON
     private static String url = "http://192.168.137.1/Api/Food_Delivery/public/index.php/api/getOrders";
     private String url_post="http://192.168.137.1/Api/Food_Delivery/public/index.php/api/getAnOrdersToDeliver";
     String delivery_id="1";
     ArrayList<HashMap<String, String>> foodlist;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_delivery);
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+        // Defines the xml file for the login_fragment
+        View view=inflater.inflate(R.layout.fragment_deliverer_main, parent, false);
+
         // Progress dialog
-        progressDialog = new ProgressDialog(delivery.this);
+        progressDialog = new ProgressDialog(getActivity());
         progressDialog.setCancelable(false);
         //getting reference to listview
         foodlist = new ArrayList<>();
-        listView=(ListView)findViewById(R.id.listView);
-        progressDialog = new ProgressDialog(delivery.this);
+        listView=(ListView)view.findViewById(R.id.listView);
+        progressDialog = new ProgressDialog(getActivity());
         progressDialog.setCancelable(false);
 
         //executing method to get orders
         try {
             new GetOrders().execute();
         }
-          catch (Exception ex)
-          {
-              Toast.makeText(delivery.this,"Error "+ex,Toast.LENGTH_SHORT).show();
-          }
+        catch (Exception ex)
+        {
+            Toast.makeText(getActivity(),"Error "+ex,Toast.LENGTH_SHORT).show();
+        }
+
+
+
+
+
+        return view ;
     }
 
 
@@ -81,7 +86,7 @@ public class delivery extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             // Showing progress dialog
-            pDialog = new ProgressDialog(delivery.this);
+            pDialog = new ProgressDialog(getActivity());
             pDialog.setMessage("Please wait getting customer orders....");
             pDialog.setCancelable(false);
             pDialog.show();
@@ -127,10 +132,10 @@ public class delivery extends AppCompatActivity {
                     }
                 } catch (final JSONException e) {
                     //Log.e(TAG, "Json parsing error: " + e.getMessage());
-                    runOnUiThread(new Runnable() {
+                    getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(delivery.this,
+                            Toast.makeText(getActivity(),
                                     "Json parsing error: " + e.getMessage(),
                                     Toast.LENGTH_LONG)
                                     .show();
@@ -140,10 +145,10 @@ public class delivery extends AppCompatActivity {
                 }
             } else {
                 // Log.e(TAG, "Couldn't get json from server.");
-                runOnUiThread(new Runnable() {
+                getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(delivery.this,
+                        Toast.makeText(getActivity(),
                                 "Couldn't get json from server. Check LogCat for possible errors!",
                                 Toast.LENGTH_LONG)
                                 .show();
@@ -164,19 +169,23 @@ public class delivery extends AppCompatActivity {
             /**
              * Updating parsed JSON data into ListView
              * */
-           try {
-               ListAdapter adapter = new SimpleAdapter(
-                       delivery.this, foodlist,
-                       R.layout.delivery_list, new String[]{"id", "food_ordered","cost","destination"}, new int[]{
-                       R.id.txt_deliver_order_id, R.id.txt_deliver_food_ordered,R.id.txt_deliver_total_cost,
-                       R.id.txt_deliver_destination});
 
-               listView.setAdapter(adapter);
-               listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-           }catch(Exception ex)
-           {
-               Toast.makeText(delivery.this,"Error "+ex,Toast.LENGTH_LONG).show();
-           }
+            Toast toast=Toast.makeText(getActivity(), "Hello Welcome,Please choose an order to deliver to the customer.Thank you", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+            try {
+                ListAdapter adapter = new SimpleAdapter(
+                        getActivity(), foodlist,
+                        R.layout.delivery_list, new String[]{"id", "food_ordered","cost","destination"}, new int[]{
+                        R.id.txt_deliver_order_id, R.id.txt_deliver_food_ordered,R.id.txt_deliver_total_cost,
+                        R.id.txt_deliver_destination});
+
+                listView.setAdapter(adapter);
+                listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+            }catch(Exception ex)
+            {
+                Toast.makeText(getActivity(),"Error "+ex,Toast.LENGTH_LONG).show();
+            }
 
 
 
@@ -184,20 +193,20 @@ public class delivery extends AppCompatActivity {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
-                    //Toast.makeText(delivery.this,"You have selected  "+foodlist.get(pos),Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getActivity(),"You have selected  "+foodlist.get(pos),Toast.LENGTH_LONG).show();
                     //hashmaps
 
 
                     try{
                         final String order_id=foodlist.get(pos).get("id");
                         String destination=foodlist.get(pos).get("destination");
-                       // Toast.makeText(delivery.this,"You have selected  "+food_name,Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(getActivity(),"You have selected  "+food_name,Toast.LENGTH_SHORT).show();
                         String data=foodlist.get(pos).toString();
                         //myarray[0]=calories;
 
 
 
-                        AlertDialog dialog = new AlertDialog.Builder(delivery.this)
+                        AlertDialog dialog = new AlertDialog.Builder(getActivity())
                                 .setTitle("\n\n\nDelivery Alert")
                                 .setMessage("Do you want to deliver Order ID  "+order_id +" to "+destination+" ?")
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -215,7 +224,7 @@ public class delivery extends AppCompatActivity {
 
                     }catch (Exception ex)
                     {
-                        Toast.makeText(delivery.this,"Error "+ex,Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(),"Error "+ex,Toast.LENGTH_LONG).show();
                     }
 
                 }
@@ -238,29 +247,29 @@ public class delivery extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 //Log.d(TAG, "Register Response: " + response.toString());
-                Toast.makeText(getApplicationContext(), " "+response.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), " "+response.toString(), Toast.LENGTH_SHORT).show();
 
                 hideDialog();
-                //Toast.makeText(getApplicationContext(), "Response "+response.toString(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getActivity(), "Response "+response.toString(), Toast.LENGTH_LONG).show();
                 try {
                     JSONObject jObj = new JSONObject(response);
                     boolean error = jObj.getBoolean("error");
 
 
                     // String user = jObj.getJSONObject("user").getString("name");
-                    // Toast.makeText(getApplicationContext(), "Hi " + user +", You are successfully Registered!", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(getActivity(), "Hi " + user +", You are successfully Registered!", Toast.LENGTH_SHORT).show();
 
                     // Launch login activity
-                    Toast.makeText(getApplicationContext(), "Delivery request successfull,Please deliver now ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Delivery request successfull,Please deliver now ", Toast.LENGTH_SHORT).show();
                 /*    Intent intent = new Intent(
-                            getApplicationContext(),
+                            getActivity(),
                             driver.class);
                     startActivity(intent);
-                    getApplicationContext().finish();*/
+                    getActivity().finish();*/
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                   /* Toast.makeText(getApplicationContext(),
+                   /* Toast.makeText(getActivity(),
                             "Error Occured Try again"+e, Toast.LENGTH_LONG).show();*/
                 }
 
@@ -270,7 +279,7 @@ public class delivery extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 //Log.e(TAG, "Registration Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
+                Toast.makeText(getActivity(),
                         error.getMessage(), Toast.LENGTH_LONG).show();
                 hideDialog();
             }
@@ -287,7 +296,7 @@ public class delivery extends AppCompatActivity {
         };
         // Adding request to request queue
         //requestQueue.add(strReq);
-        AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(strReq, cancel_req_tag);
+        AppSingleton.getInstance(getActivity()).addToRequestQueue(strReq, cancel_req_tag);
     }
 
 
@@ -302,5 +311,11 @@ public class delivery extends AppCompatActivity {
     }
 
 
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        // Setup any handles to view objects here
+        // EditText etFoo = (EditText) view.findViewById(R.id.etFoo);
+    }
 
 }
