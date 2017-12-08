@@ -155,10 +155,10 @@ public class order_confirm extends AppCompatActivity {
                 saveOrder(user_id,food_ordered,amount,de,cost);
               //k./  Toast.makeText(getApplicationContext(),)
 
-             /*   //delaying
+                //delaying
                 final ProgressDialog progressDialog = new ProgressDialog(order_confirm.this);
                 progressDialog.setIndeterminate(true);
-                progressDialog.setMessage("Ordering..."+destination);
+                progressDialog.setMessage("Completing Order...");
                 progressDialog.show();
                 new android.os.Handler().postDelayed(
                         new Runnable() {
@@ -170,7 +170,7 @@ public class order_confirm extends AppCompatActivity {
                                 startActivity(intent);
 
                             }
-                        }, 3000);*/
+                        }, 3000);
 
 
 
@@ -275,11 +275,9 @@ public class order_confirm extends AppCompatActivity {
 
                     // Launch login activity
                     Toast.makeText(getApplicationContext(), "Ordered Successfully ", Toast.LENGTH_SHORT).show();
-                /*    Intent intent = new Intent(
-                            getApplicationContext(),
-                            driver.class);
-                    startActivity(intent);
-                    getApplicationContext().finish();*/
+
+
+                   // getApplicationContext().finish();
 
                 } catch (JSONException e) {
                     e.printStackTrace();

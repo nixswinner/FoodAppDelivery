@@ -5,10 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class deliverer_dashboard extends AppCompatActivity {
 
@@ -30,11 +28,11 @@ public class deliverer_dashboard extends AppCompatActivity {
                     ft1.replace(R.id.content, new fragment_deliverer_orders());
                     ft1.commit();
                     return true;
-                case R.id.navigation_notifications:
+               /* case R.id.navigation_notifications:
                     FragmentTransaction ftt = getSupportFragmentManager().beginTransaction();
                     ftt.replace(R.id.content, new fragment_deliverer_commission());
                     ftt.commit();
-                    return true;
+                    return true;*/
             }
             return false;
         }
@@ -52,6 +50,9 @@ public class deliverer_dashboard extends AppCompatActivity {
             ft.replace(R.id.content, new fragment_deliverer_main());
             ft.commit();
         }
+      /*  Toast toast=Toast.makeText(getApplicationContext(), "Hello Welcome,Please choose an order to deliver to the customer.Thank you", Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();*/
 
         //mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);

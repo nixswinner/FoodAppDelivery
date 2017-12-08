@@ -198,7 +198,7 @@ public class manage_foodlist extends AppCompatActivity {
                 str=str+strSeparator;
             }
         }
-        return str+"_";
+        return str+".";
     }
 /*    //selected item on spinner
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {

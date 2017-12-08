@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+    <TextView
+        android:id="@+id/txt_deliver_order_id"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dip"
+        android:paddingTop="6dip"
+        android:textColor="#2754ea"
+        android:textSize="16sp"
+        android:text="Order ID D"
+        android:layout_toRightOf="@+id/textView2"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dip"
+        android:paddingTop="6dip"
+        android:text="Order ID:"
+        android:textColor="#2754ea"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txt_deliver_food_ordered"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dip"
+        android:paddingTop="6dip"
+        android:textColor="#2754ea"
+        android:textSize="16sp"
+        android:layout_below="@+id/txt_deliver_order_id"
+        android:layout_toRightOf="@+id/textView4"
+        android:text="Food Ordered D"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dip"
+        android:paddingTop="6dip"
+        android:layout_below="@+id/textView2"
+        android:text="Food Ordered:"
+        android:textColor="#2754ea"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txt_deliver_total_cost"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dip"
+        android:paddingTop="6dip"
+        android:text="Total Cost D"
+        android:textColor="#2754ea"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_alignBaseline="@+id/textView5"
+        android:layout_alignBottom="@+id/textView5"
+        android:layout_toRightOf="@+id/textView4"
+        android:layout_toEndOf="@+id/textView4" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dip"
+        android:paddingTop="6dip"
+        android:layout_below="@+id/textView4"
+        android:text="Total Cost:"
+        android:textColor="#2754ea"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txt_deliver_destination"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dip"
+        android:paddingTop="6dip"
+        android:text="Destination D"
+        android:layout_below="@+id/txt_deliver_total_cost"
+        android:layout_toRightOf="@+id/textView6"
+        android:textColor="#2754ea"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dip"
+        android:paddingTop="6dip"
+        android:layout_below="@+id/textView5"
+        android:text="Delivery Destination:"
+        android:textColor="#2754ea"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/txt_deliver_Recepient"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dip"
+        android:paddingTop="6dip"
+        android:text="Recepient"
+        android:layout_below="@+id/txt_deliver_destination"
+        android:layout_toRightOf="@+id/textView7"
+        android:textColor="#2754ea"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dip"
+        android:paddingTop="6dip"
+        android:layout_below="@+id/textView6"
+        android:text="Recepient Name:"
+        android:textColor="#2754ea"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txt_deliver_recephone"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dip"
+        android:paddingTop="6dip"
+        android:text="Phone"
+        android:layout_below="@+id/txt_deliver_Recepient"
+        android:layout_toRightOf="@+id/textView7"
+        android:textColor="#2754ea"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dip"
+        android:paddingTop="6dip"
+        android:layout_below="@+id/textView7"
+        android:text="Recepient Phone:"
+        android:textColor="#2754ea"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/txt_deliver_status"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dip"
+        android:paddingTop="6dip"
+        android:text="Delivery Status"
+        android:layout_below="@+id/txt_deliver_recephone"
+        android:layout_toRightOf="@+id/textView7"
+        android:textColor="#2754ea"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dip"
+        android:paddingTop="6dip"
+        android:layout_below="@+id/textView8"
+        android:text="Delivery Status:"
+        android:textColor="#2754ea"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+
+</RelativeLayout>

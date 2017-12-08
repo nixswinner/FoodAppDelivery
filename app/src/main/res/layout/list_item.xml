@@ -22,6 +22,18 @@
         android:layout_alignBottom="@+id/cost"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+    <TextView
+        android:id="@+id/txtTitlee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ksh"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_alignBottom="@+id/foodname"
+        android:layout_toLeftOf="@+id/cost"
+        android:layout_toStartOf="@+id/cost" />
+
+
 
     <TextView
         android:id="@+id/cost"

@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         ///o_s="1";
         int x=Integer.parseInt(o_s);
         x=x+1;
-        if (x==2)
+        if (o_s=="1")
         {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.content, new fragment_orders());
